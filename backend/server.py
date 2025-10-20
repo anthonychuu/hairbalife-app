@@ -1,94 +1,227 @@
-from fastapi import FastAPI, APIRouter
-from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
-import logging
-from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
-import uuid
+import certifi
 from datetime import datetime, timezone
+from typing import List, Optional
 
+import stripe
+from dotenv import load_dotenv
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from motor.motor_asyncio import AsyncIOMotorClient
+from pydantic import BaseModel
 
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+# -------------------------------------------------------------------
+# Load environment variables
+# -------------------------------------------------------------------
+load_dotenv()
 
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+MONGO_URL = os.getenv("MONGO_URL")
+DB_NAME = os.getenv("DB_NAME")
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000") # NEW: Default fallback
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "").split(",")           # NEW: Load CORS origins
 
-# Create the main app without a prefix
-app = FastAPI()
+# -------------------------------------------------------------------
+# Pydantic Models for Data Validation (NEW)
+# -------------------------------------------------------------------
+class LineItem(BaseModel):
+    """Defines the structure for an item in the cart."""
+    name: str
+    price: float
+    quantity: int
 
-# Create a router with the /api prefix
-api_router = APIRouter(prefix="/api")
+class CheckoutRequest(BaseModel):
+    """Defines the structure for the checkout request body."""
+    items: List[LineItem]
 
+# -------------------------------------------------------------------
+# App initialization
+# -------------------------------------------------------------------
+app = FastAPI(
+    title="Hairbalife Backend",
+    version="1.1",
+    description="A robust backend using FastAPI, Stripe, and MongoDB.",
+)
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class StatusCheckCreate(BaseModel):
-    client_name: str
-
-# Add your routes to the router instead of directly to app
-@api_router.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
-
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
-
-# Include the router in the main app
-app.include_router(api_router)
+# Use configured origins or a default if not set
+origins = [origin.strip() for origin in CORS_ORIGINS if origin]
+if not origins:
+    origins = [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
 
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=origins, # CHANGED: Use dynamic origins
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
+# -------------------------------------------------------------------
+# Database setup
+# -------------------------------------------------------------------
+# Define db with a type hint for better autocompletion
+db: Optional[AsyncIOMotorClient] = None
 
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    client.close()
+if MONGO_URL and DB_NAME:
+    try:
+        mongo_client = AsyncIOMotorClient(
+            MONGO_URL,
+            tls=True,
+            tlsCAFile=certifi.where(),
+        )
+        db = mongo_client[DB_NAME]
+        print("✅ Connected to MongoDB successfully.")
+    except Exception as e:
+        print(f"⚠️ MongoDB connection failed: {e}")
+        db = None
+else:
+    db = None
+    print("⚠️ MongoDB not configured — skipping DB connection.")
 
 
+@app.on_event("startup")
+async def startup_event():
+    """Configure Stripe on application startup."""
+    if not STRIPE_SECRET_KEY:
+        raise RuntimeError("❌ STRIPE_SECRET_KEY not found in environment variables.")
+    stripe.api_key = STRIPE_SECRET_KEY
+    print("✅ Stripe API key configured.")
+    print(f"📡 Frontend URL configured for: {FRONTEND_URL}")
+    print(f"🌍 Allowing CORS from: {origins}")
+
+# -------------------------------------------------------------------
+# Routes
+# -------------------------------------------------------------------
+
+@app.get("/")
+async def root():
+    """Root endpoint for health checks."""
+    return {"message": "Hairbalife backend running ✅"}
+
+
+@app.post("/api/create-checkout-session")
+async def create_checkout_session(payload: CheckoutRequest): # CHANGED: Uses Pydantic model
+    """
+    Create a Stripe Checkout Session from a validated list of cart items.
+    """
+    if not payload.items:
+        raise HTTPException(status_code=400, detail="No items provided in cart.")
+
+    try:
+        # Build Stripe line items from the validated payload
+        line_items = [
+            {
+                "price_data": {
+                    "currency": "eur",
+                    "product_data": {"name": item.name},
+                    "unit_amount": int(round(item.price * 100)),  # Convert to cents
+                },
+                "quantity": item.quantity,
+            }
+            for item in payload.items
+        ]
+
+        # Create Stripe checkout session with dynamic URLs
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=line_items,
+            mode="payment",
+            success_url=f"{FRONTEND_URL}/success", # CHANGED
+            cancel_url=f"{FRONTEND_URL}/cancel",   # CHANGED
+        )
+
+        print(f"✅ Created Stripe Session: {session.id}")
+       # server.py -> create_checkout_session function
+        return {"url": session.url}
+
+    except stripe.error.StripeError as e:
+        print(f"❌ Stripe error: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        print(f"❌ An unexpected error occurred: {e}")
+        raise HTTPException(status_code=500, detail="An internal server error occurred.")
+
+
+@app.post("/api/stripe/webhook")
+async def stripe_webhook(request: Request):
+    """
+    Handle incoming Stripe webhook events securely.
+    """
+    payload = await request.body()
+    sig_header = request.headers.get("stripe-signature")
+
+    if not STRIPE_WEBHOOK_SECRET:
+        raise HTTPException(status_code=500, detail="Webhook secret is not configured.")
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload=payload, sig_header=sig_header, secret=STRIPE_WEBHOOK_SECRET
+        )
+    except ValueError as e:
+        print(f"⚠️ Invalid webhook payload: {e}")
+        raise HTTPException(status_code=400, detail="Invalid payload")
+    except stripe.error.SignatureVerificationError as e:
+        print(f"⚠️ Invalid webhook signature: {e}")
+        raise HTTPException(status_code=400, detail="Invalid signature")
+
+    # -------------------------------------------------------------------
+    # THIS ENTIRE BLOCK WAS MOVED TO BE INSIDE THE FUNCTION
+    # -------------------------------------------------------------------
+    if event["type"] == "checkout.session.completed":
+        session = event["data"]["object"]
+        print(f"💳 Payment successful for session: {session['id']}")
+
+        try:
+            line_items = stripe.checkout.Session.list_line_items(session.id, limit=20)
+            order_items = [
+                {
+                    "description": item.description,
+                    "quantity": item.quantity,
+                    "amount_total": item.amount_total,
+                    "currency": item.currency,
+                }
+                for item in line_items.data
+            ]
+        except Exception as e:
+            print(f"⚠️ Could not retrieve line items: {e}")
+            order_items = []
+
+        order = {
+            "stripe_session_id": session.get("id"),
+            "amount_total": session.get("amount_total"),
+            "currency": session.get("currency"),
+            "payment_status": session.get("payment_status"),
+            "customer_email": session.get("customer_details", {}).get("email"),
+            "created_at": datetime.now(timezone.utc),
+            "items": order_items,
+        }
+
+        if db:
+            try:
+                result = await db.orders.insert_one(order)
+                print(f"✅ Order {result.inserted_id} saved to MongoDB with items.")
+            except Exception as db_error:
+                print(f"⚠️ Failed to save order to MongoDB: {db_error}")
+        else:
+            print("⚠️ MongoDB not configured; skipping order save.")
+    
+    # You can add logic for other events here using elif
+    # elif event["type"] == "charge.refunded":
+    #     print("Refund processed.")
+
+    else:
+        print(f"ℹ️ Unhandled event type: {event['type']}")
+
+    return {"status": "success"} # This should also be inside the function
+
+# -------------------------------------------------------------------
+# Local run (optional, for development)
+# -------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    # Use 0.0.0.0 to make it accessible on your local network
+    uvicorn.run(app, host="0.0.0.0", port=8000)
