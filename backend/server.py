@@ -21,9 +21,42 @@ DB_NAME = os.getenv("DB_NAME")
 STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
-# ✅ FIX: Use .strip() to remove accidental whitespace from environment variables
+# Use .strip() to remove accidental whitespace from environment variables
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000").strip()
 CORS_ORIGINS_RAW = os.getenv("CORS_ORIGINS", "")
+
+# -------------------------------------------------------------------
+# Constants
+# -------------------------------------------------------------------
+# Full list of ISO country codes required by Stripe
+ALL_COUNTRY_CODES = [
+    "AC", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ",
+    "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS", "BT", "BV", "BW", "BY", "BZ",
+    "CA", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU", "CV", "CW", "CY", "CZ",
+    "DE", "DJ", "DK", "DM", "DO", "DZ",
+    "EC", "EE", "EG", "EH", "ER", "ES", "ET",
+    "FI", "FJ", "FK", "FO", "FR",
+    "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GT", "GU", "GW", "GY",
+    "HK", "HN", "HR", "HT", "HU",
+    "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT",
+    "JE", "JM", "JO", "JP",
+    "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ",
+    "LA", "LB", "LC", "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY",
+    "MA", "MC", "MD", "ME", "MF", "MG", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
+    "NA", "NC", "NE", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ",
+    "OM",
+    "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PY",
+    "QA",
+    "RE", "RO", "RS", "RU", "RW",
+    "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX", "SY", "SZ",
+    "TA", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ",
+    "UA", "UG", "US", "UY", "UZ",
+    "VA", "VC", "VE", "VG", "VI", "VN", "VU",
+    "WF", "WS",
+    "XK",
+    "YE", "YT",
+    "ZA", "ZM", "ZW",
+]
 
 # -------------------------------------------------------------------
 # Pydantic Models for Data Validation
@@ -71,7 +104,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Hairbalife Backend",
-    lifespan=lifespan # Use the new lifespan manager
+    lifespan=lifespan
 )
 
 origins = [origin.strip() for origin in CORS_ORIGINS_RAW.split(",") if origin]
@@ -117,12 +150,14 @@ async def create_checkout_session(payload: CheckoutRequest):
             mode="payment",
             success_url=f"{FRONTEND_URL}/success",
             cancel_url=f"{FRONTEND_URL}/cancel",
+            shipping_address_collection={
+                "allowed_countries": ALL_COUNTRY_CODES,
+            },
         )
 
         print(f"✅ Created Stripe Session: {session.id}")
         return {"url": session.url}
 
-    # ✅ FIX: Use the new syntax for Stripe exceptions
     except stripe.StripeError as e:
         print(f"❌ Stripe error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
@@ -164,17 +199,20 @@ async def stripe_webhook(request: Request):
             print(f"⚠️ Could not retrieve line items: {e}")
             order_items = []
 
+        # Save customer name and shipping details to the database
         order = {
             "stripe_session_id": session.id,
             "amount_total": session.amount_total,
             "customer_email": session.customer_details.email,
+            "customer_name": session.customer_details.name,
+            "shipping_details": session.shipping_details.to_dict() if session.shipping_details else None,
             "created_at": datetime.now(timezone.utc),
             "items": order_items,
         }
 
         if db:
             await db.orders.insert_one(order)
-            print("✅ Order saved to MongoDB.")
+            print("✅ Order with shipping details saved to MongoDB.")
     else:
         print(f"ℹ️ Unhandled event type: {event['type']}")
 
@@ -187,3 +225,4 @@ if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
     uvicorn.run("server:app", host="0.0.0.0", port=port, reload=True)
+
