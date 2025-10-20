@@ -24,21 +24,23 @@ import {
   removeItem,
   calculateTotals,
 } from "../utils/cartUtils";
+import { loadStripe } from "@stripe/stripe-js";
+
+// ✅ 1. Load Stripe outside the component render logic.
+// This prevents recreating the Stripe promise on every render.
+const stripePromise = loadStripe("pk_live_51SJeVXCQ8Tn4kDoE0oHJdQEntTIrc4GzH0kIGINYBNyk38UecWrqSmndcahYzBdWv8hBE6NkGEEHZmQwrEWPQfIs00LqnvTEKe");
 
 const HairbalifePage = () => {
   const [isVisible, setIsVisible] = useState({});
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  // ✅ Cart States
   const [cartItems, setCartItems] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [buyQty, setBuyQty] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  // 🔹 Derived totals
   const { total: totalCartValue, totalQty: totalCartQuantity } =
     calculateTotals(cartItems);
 
-  // 🖼️ Carousel
   const productImages = [
     { url: "/images/p1.png", title: "Premium Hairbalife Shampoo" },
     { url: "/images/p2.png", title: "Luxury Black & Gold Design" },
@@ -58,31 +60,25 @@ const HairbalifePage = () => {
     );
   };
 
-  // 🛒 Quantity controls (main product)
   const incBuyQty = () => setBuyQty((q) => q + 1);
   const decBuyQty = () => setBuyQty((q) => Math.max(0, q - 1));
 
-  // 📦 Add main product
   const addBuySectionToCart = () => {
     if (buyQty <= 0) return;
-
     const product = {
       id: "hairbalife-main",
       name: mockData.product.name,
       price: parseFloat(mockData.product.price),
     };
-
     let updated = [...cartItems];
     for (let i = 0; i < buyQty; i++) {
       updated = addItemToCart(updated, product);
     }
-
     setCartItems(updated);
     setBuyQty(0);
     setShowCart(true);
   };
 
-  // 🛍️ Add from gallery
   const addGalleryItem = (p) => {
     const product = {
       id: p.id,
@@ -94,7 +90,6 @@ const HairbalifePage = () => {
     setShowCart(true);
   };
 
-  // 🔄 Update cart
   const incItem = (id) =>
     setCartItems((prev) => {
       const item = prev.find((i) => i.id === id);
@@ -109,17 +104,53 @@ const HairbalifePage = () => {
 
   const removeLine = (id) => setCartItems((prev) => removeItem(prev, id));
 
-  // 💳 Checkout placeholder
-  const handleCheckout = () => {
-    if (cartItems.length === 0) return alert("Cart is empty!");
-    alert(
-      `Proceed to payment: €${totalCartValue.toFixed(
-        2
-      )} for ${totalCartQuantity} item(s).`
-    );
-  };
+  // HairbalifePage.js
 
-  // 🎞️ Auto-slide
+// ✅ Corrected Checkout Handler for the new Stripe API
+const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+        alert("Your cart is empty!");
+        return;
+    }
+
+    try {
+        // Step 1: Send cart data to your backend
+const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+const response = await fetch(`${apiUrl}/api/create-checkout-session`, {            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                items: cartItems.map((item) => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price,
+                })),
+            }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || `Server error: ${response.status}`);
+        }
+
+        const session = await response.json();
+
+        // Step 2: Verify the session URL exists and redirect
+        if (session.url) {
+            // This is the new, simpler way to redirect.
+            window.location.href = session.url;
+        } else {
+            throw new Error("Failed to create a checkout session.");
+        }
+
+    } catch (error) {
+        console.error("Checkout process error:", error);
+        alert(`Checkout failed: ${error.message}`);
+    }
+};
+
+
+
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % productImages.length);
@@ -127,7 +158,6 @@ const HairbalifePage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // ✨ Fade-in animation
   useEffect(() => {
     const observers = [];
     const sections = document.querySelectorAll(".animate-section");
@@ -153,6 +183,7 @@ const HairbalifePage = () => {
     }
   };
 
+  // --- The rest of your JSX remains exactly the same ---
   return (
     <div className="min-h-screen bg-black text-white font-['Poppins']">
       <Toaster />
@@ -356,6 +387,113 @@ const HairbalifePage = () => {
           </div>
         </div>
       </section>
+    
+
+      {/* Reels Section */}
+<section className="py-20 px-6 bg-gradient-to-b from-black to-gray-900 animate-section">
+  <div className="max-w-6xl mx-auto text-center">
+    <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold mb-12">
+      Behind the Essence
+    </h2>
+    <div className="flex flex-col md:flex-row justify-center items-center gap-8">
+      {mockData.reels.map((reel) => (
+        <div
+          key={reel.id}
+          className="relative w-full md:w-1/3 aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-yellow-400/30 shadow-2xl hover:border-yellow-400/60 transition-all duration-500"
+        >
+          <video
+            src={reel.src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover rounded-2xl"
+          ></video>
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+            <h3 className="text-lg font-semibold text-yellow-400">
+              {reel.title}
+            </h3>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
+{/* Product Visual Gallery */}
+<section className="py-24 px-6 bg-gradient-to-b from-gray-950 via-black to-gray-900 animate-section relative overflow-hidden">
+  <div className="max-w-6xl mx-auto text-center relative z-10">
+    <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold mb-4">
+      Discover The Essence
+    </h2>
+    <p className="text-gray-400 mb-12 text-lg max-w-2xl mx-auto">
+      Every drop tells a story — explore our luxurious textures and natural beauty.
+    </p>
+
+    <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+      {[
+        "/images/gallery/p1.png",
+        "/images/gallery/p2.png",
+        "/images/gallery/p3.png",
+        "/images/gallery/p4.png",
+        "/images/gallery/p5.png",
+        "/images/gallery/p6.png",
+        "/images/gallery/p4.png",
+        "/images/gallery/p3.png",
+        "/images/gallery/p2.png",
+      ].map((src, index) => (
+        <div
+          key={index}
+          className="relative overflow-hidden rounded-3xl cursor-pointer group break-inside-avoid border border-yellow-400/10 hover:border-yellow-400/40 shadow-xl hover:shadow-yellow-400/20 transition-all duration-500"
+          onClick={() => setSelectedImage(src)}
+        >
+          <img
+            src={src}
+            alt={`Gallery ${index + 1}`}
+            className="w-full h-auto rounded-3xl object-cover transform group-hover:scale-105 group-hover:rotate-1 transition-all duration-700 ease-out"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+          <div className="absolute bottom-4 left-4 text-left opacity-0 group-hover:opacity-100 transition-all duration-500">
+            <p className="text-sm text-yellow-400 font-semibold tracking-wide">
+              #HairbalifeLuxury
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Lightbox Modal */}
+  {selectedImage && (
+    <div
+      className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 flex items-center justify-center"
+      onClick={() => setSelectedImage(null)}
+    >
+      <img
+        src={selectedImage}
+        alt="Full View"
+        className="max-h-[90vh] max-w-[90vw] rounded-2xl shadow-2xl transform scale-100 transition-all duration-500"
+      />
+      <button
+        className="absolute top-8 right-8 text-yellow-400 hover:text-white text-3xl font-bold"
+        onClick={() => setSelectedImage(null)}
+      >
+        ✕
+      </button>
+    </div>
+  )}
+
+  {/* Floating glow accent */}
+  <div className="absolute -top-40 -left-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+  <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+</section>
+
+
+
+
+
 
       {/* Reviews */}
       <section className="py-20 px-6 bg-gradient-to-b from-gray-900 to-black animate-section">
@@ -405,6 +543,8 @@ const HairbalifePage = () => {
           </div>
         </div>
       </section>
+
+  
 
       {/* Buy Section */}
       <section id="buy-section" className="py-20 px-6 animate-section">
