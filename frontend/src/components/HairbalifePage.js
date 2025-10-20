@@ -116,9 +116,10 @@ const handleCheckout = async () => {
     try {
         // Step 1: Send cart data to your backend
 const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
-const response = await fetch(`${apiUrl}/api/create-checkout-session`, {            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
+const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
                 items: cartItems.map((item) => ({
                     name: item.name,
                     quantity: item.quantity,
