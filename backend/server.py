@@ -223,5 +223,10 @@ async def stripe_webhook(request: Request):
 # -------------------------------------------------------------------
 if __name__ == "__main__":
     import uvicorn
+
+    # ✅ Get the port from the environment variable provided by Render.
+    #    Default to 8000 for local development.
+    port = int(os.getenv("PORT", 8000))
+
     # Use 0.0.0.0 to make it accessible on your local network
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=port)
