@@ -28,8 +28,8 @@ CORS_ORIGINS_RAW = os.getenv("CORS_ORIGINS", "")
 # -------------------------------------------------------------------
 # Constants
 # -------------------------------------------------------------------
-# Full list of ISO country codes required by Stripe
-# UPDATED: Removed codes not supported by Stripe for shipping address collection (e.g., CU, IR, KP, SY)
+# ✅ CORRECTED LIST: Full list of ISO country codes verified and supported by Stripe.
+# Removed unsupported codes like 'AS', 'CU', 'IR', 'KP', 'MP', 'PR', 'SY', 'VI'.
 ALL_COUNTRY_CODES = [
     "AC", "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AT", "AU", "AW", "AX", "AZ",
     "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS", "BT", "BV", "BW", "BY", "BZ",
@@ -37,26 +37,26 @@ ALL_COUNTRY_CODES = [
     "DE", "DJ", "DK", "DM", "DO", "DZ",
     "EC", "EE", "EG", "EH", "ER", "ES", "ET",
     "FI", "FJ", "FK", "FO", "FR",
-    "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GT", "GU", "GW", "GY",
+    "GA", "GB", "GD", "GE", "GF", "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY",
     "HK", "HN", "HR", "HT", "HU",
     "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IS", "IT",
     "JE", "JM", "JO", "JP",
     "KE", "KG", "KH", "KI", "KM", "KN", "KR", "KW", "KY", "KZ",
     "LA", "LB", "LC", "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY",
-    "MA", "MC", "MD", "ME", "MF", "MG", "MK", "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
+    "MA", "MC", "MD", "ME", "MF", "MG", "MK", "ML", "MM", "MN", "MO", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ",
     "NA", "NC", "NE", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ",
     "OM",
-    "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PY",
+    "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PM", "PN", "PT", "PY",
     "QA",
     "RE", "RO", "RS", "RU", "RW",
     "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS", "ST", "SV", "SX", "SZ",
     "TA", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ",
     "UA", "UG", "US", "UY", "UZ",
-    "VA", "VC", "VE", "VG", "VI", "VN", "VU",
+    "VA", "VC", "VE", "VG", "VN", "VU",
     "WF", "WS",
     "XK",
     "YE", "YT",
-    "ZA", "ZM", "ZW",
+    "ZA", "ZM", "ZW", "ZZ"
 ]
 
 # -------------------------------------------------------------------
