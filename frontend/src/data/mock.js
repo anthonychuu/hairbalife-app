@@ -96,7 +96,7 @@ export const mockData = {
       rating: 5,
       review:
         "Ich war wirklich überrascht, wie weich und gepflegt sich meine Haare schon nach der ersten Wäsche angefühlt haben. Der Duft ist dezent, aber total angenehm, richtig spa-mäßig!",
-      image: "/images/customer1.jpg",
+      image: "/images/customer1.jpeg",
       location: "Berlin"
     },
     {
@@ -105,7 +105,7 @@ export const mockData = {
       rating: 5,
       review:
         "Ich hab schon viele Shampoos ausprobiert, aber das hier ist echt das erste, bei dem ich das Gefühl habe, dass meine Haare stärker werden. Es fühlt sich luxuriös an, aber trotzdem natürlich – jeden Cent wert.",
-      image: "/images/customer2.jpg",
+      image: "/images/customer2.jpeg",
       location: "München"
     },
     {
@@ -114,7 +114,7 @@ export const mockData = {
       rating: 4,
       review:
         "Mir gefällt vor allem, dass keine Silikone oder Parabene drin sind. Meine Kopfhaut ist viel ruhiger geworden, und meine Haare glänzen schön. Einen halben Stern Abzug nur, weil ich mir eine größere Flasche wünschen würde.",
-      image: "/images/customer3.jpg",
+      image: "/images/customer3.jpeg",
       location: "Hamburg"
     },
     {
@@ -122,17 +122,26 @@ export const mockData = {
       name: "Laura Meier",
       rating: 5,
       review:
-        "Ich benutze es jetzt seit etwa drei Wochen und bekomme ständig Komplimente für meine Haare. Sie sind voller, weicher und sehen einfach gesünder aus. Absolut empfehlenswert!",
-      image: "/images/customer4.jpg",
+        "I really like this product, would recommend to everyone!",
+      image: "/images/customer2.jpeg",
       location: "Köln"
     },
     {
       id: 5,
+      name: "Ella More",
+      rating: 5,
+      review:
+        "Ich benutze es jetzt seit etwa drei Wochen und bekomme ständig Komplimente für meine Haare. Sie sind voller, weicher und sehen einfach gesünder aus. Absolut empfehlenswert!",
+      image: "/images/customer4.jpeg",
+      location: "Köln"
+    },
+    {
+      id: 6,
       name: "Jonas Weber",
       rating: 4,
       review:
         "Angenehmer Duft, sehr gutes Gefühl beim Waschen. Meine Haare fühlen sich kräftiger an, nur der Preis ist etwas hoch, aber Qualität hat halt ihren Preis.",
-      image: "/images/customer5.jpg",
+      image: "/images/customer5.jpeg",
       location: "Frankfurt am Main"
     }
   ],
