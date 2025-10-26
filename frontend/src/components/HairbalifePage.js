@@ -441,9 +441,9 @@ const response = await fetch(`${apiUrl}/api/create-checkout-session`, {
         "/images/gallery/p4.png",
         "/images/gallery/p5.png",
         "/images/gallery/p6.png",
-        "/images/gallery/p4.png",
-        "/images/gallery/p3.png",
-        "/images/gallery/p2.png",
+        "/images/gallery/p7.png",
+        "/images/gallery/p8.png",
+        "/images/gallery/p9.png",
       ].map((src, index) => (
         <div
           key={index}
