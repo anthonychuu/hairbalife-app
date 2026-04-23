@@ -50,7 +50,7 @@ export const mockData = {
       id: 1,
       name: "Hairbalife Repair Shampoo - 500 ml",
       price: 14.99,
-      image: "/images/p1.png",
+      image: "https://source.unsplash.com/900x1200/?shampoo,bottle&sig=11",
       description: "Keratin-rich daily shampoo for damaged and fragile hair",
       category: "Shampoo"
     },
@@ -58,7 +58,7 @@ export const mockData = {
       id: 2,
       name: "Hairbalife Nourish Conditioner - 400 ml",
       price: 16.99,
-      image: "/images/p2.png",
+      image: "https://source.unsplash.com/900x1200/?conditioner,haircare&sig=12",
       description: "Moisture-lock conditioner with argan and silk proteins",
       category: "Conditioner"
     },
@@ -66,7 +66,7 @@ export const mockData = {
       id: 3,
       name: "Hairbalife Scalp Detox Scrub - 250 ml",
       price: 18.49,
-      image: "/images/p3.png",
+      image: "https://source.unsplash.com/900x1200/?scalp,care,cosmetic&sig=13",
       description: "Gentle exfoliating scalp scrub with tea tree and mint",
       category: "Scalp Care"
     },
@@ -74,7 +74,7 @@ export const mockData = {
       id: 4,
       name: "Hairbalife Strength Mask - 300 ml",
       price: 21.99,
-      image: "/images/p4.png",
+      image: "https://source.unsplash.com/900x1200/?hair,mask,beauty&sig=14",
       description: "Weekly intensive mask for breakage-prone hair",
       category: "Treatment"
     },
@@ -82,7 +82,7 @@ export const mockData = {
       id: 5,
       name: "Hairbalife Heat Shield Spray - 200 ml",
       price: 25.99,
-      image: "/images/p5.png",
+      image: "https://source.unsplash.com/900x1200/?hair,spray,styling&sig=15",
       description: "Lightweight thermal protectant for blow-dry and styling",
       category: "Styling"
     },
@@ -90,7 +90,7 @@ export const mockData = {
       id: 6,
       name: "Hairbalife Volume Mousse - 180 ml",
       price: 15.49,
-      image: "/images/p6.png",
+      image: "https://source.unsplash.com/900x1200/?mousse,hair,product&sig=16",
       description: "Flexible volume mousse with humidity resistance",
       category: "Styling"
     },
@@ -98,7 +98,7 @@ export const mockData = {
       id: 7,
       name: "Hairbalife Frizz Control Serum - 120 ml",
       price: 35.99,
-      image: "/images/p1.png",
+      image: "https://source.unsplash.com/900x1200/?hair,serum,bottle&sig=17",
       description: "Gloss finish serum that smooths frizz and flyaways",
       category: "Serum"
     },
@@ -106,7 +106,7 @@ export const mockData = {
       id: 8,
       name: "Hairbalife Overnight Repair Oil - 100 ml",
       price: 27.99,
-      image: "/images/p2.png",
+      image: "https://source.unsplash.com/900x1200/?argan,oil,hair&sig=18",
       description: "Nutrient-dense overnight oil for deep restoration",
       category: "Oil"
     },
@@ -114,7 +114,7 @@ export const mockData = {
       id: 9,
       name: "Hairbalife Starter Ritual Bundle",
       price: 49.99,
-      image: "/images/p4.png",
+      image: "https://source.unsplash.com/900x1200/?beauty,product,flatlay&sig=19",
       description: "Shampoo, conditioner, and mask starter routine set",
       category: "Bundle"
     }

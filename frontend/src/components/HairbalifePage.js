@@ -269,16 +269,16 @@ const HairbalifePage = () => {
 
   // --- 3. USE THE TRANSLATIONS IN YOUR JSX ---
   return (
-    <div className="min-h-screen bg-black text-white font-['Poppins'] relative">
+    <div className="min-h-screen bg-slate-950 text-white font-['Poppins'] relative">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-24 -left-16 h-80 w-80 rounded-full bg-yellow-300/10 blur-3xl" />
-        <div className="absolute top-[35%] -right-20 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
+        <div className="absolute -top-24 -left-16 h-80 w-80 rounded-full bg-cyan-300/15 blur-3xl" />
+        <div className="absolute top-[35%] -right-20 h-96 w-96 rounded-full bg-sky-500/15 blur-3xl" />
       </div>
       <Toaster />
 
       {/* --- 4. MODIFIED LANGUAGE SWITCHER --- */}
-      <div className="fixed top-4 right-4 z-50 p-3 bg-zinc-950/70 backdrop-blur-md border border-yellow-300/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
-        <h4 className="text-sm font-medium text-yellow-400 text-center mb-2">
+      <div className="fixed top-4 right-4 z-50 p-3 bg-slate-950/70 backdrop-blur-md border border-cyan-300/20 rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.35)]">
+        <h4 className="text-sm font-medium text-cyan-300 text-center mb-2">
           {/* REPLACED with new translation key */}
           {translations[language].select_language}
         </h4>
@@ -286,14 +286,14 @@ const HairbalifePage = () => {
           <Button 
             variant={language === 'en' ? 'default' : 'outline'}
             onClick={() => setLanguage('en')}
-            className="text-yellow-400 border-yellow-400 px-3 py-1 h-auto text-sm"
+            className="text-cyan-300 border-cyan-300 px-3 py-1 h-auto text-sm"
           >
             EN
           </Button>
           <Button 
             variant={language === 'de' ? 'default' : 'outline'}
             onClick={() => setLanguage('de')}
-            className="text-yellow-400 border-yellow-400 px-3 py-1 h-auto text-sm"
+            className="text-cyan-300 border-cyan-300 px-3 py-1 h-auto text-sm"
           >
             DE
           </Button>
@@ -309,7 +309,7 @@ const HairbalifePage = () => {
               : "translate-y-8 opacity-0"
           }`}
         >
-          <Badge className="mb-5 bg-yellow-400/15 text-yellow-300 border-yellow-300/30 hover:bg-yellow-400/20">
+          <Badge className="mb-5 bg-cyan-300/15 text-cyan-200 border-cyan-200/30 hover:bg-cyan-300/20">
             {translations[language].featured_badge}
           </Badge>
           <img
@@ -317,7 +317,7 @@ const HairbalifePage = () => {
             alt="Hairbalife Logo"
             className="h-26 w-auto mx-auto mb-8 drop-shadow-2xl"
           />
-          <h1 className="text-5xl md:text-7xl font-['Playfair_Display'] font-bold mb-4 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-['Playfair_Display'] font-bold mb-4 bg-gradient-to-r from-cyan-300 via-sky-400 to-cyan-100 bg-clip-text text-transparent">
             Hairbalife
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
@@ -327,7 +327,7 @@ const HairbalifePage = () => {
           <Button
             size="lg"
             onClick={scrollToBuySection}
-            className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black font-semibold px-8 py-4 text-lg transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/25"
+            className="bg-gradient-to-r from-cyan-300 to-sky-500 hover:from-cyan-200 hover:to-sky-400 text-slate-950 font-semibold px-8 py-4 text-lg transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-sky-500/25"
           >
             <ShoppingCart className="mr-2 h-5 w-5" />
             {/* REPLACED */}
@@ -335,14 +335,14 @@ const HairbalifePage = () => {
           </Button>
 
           {totalCartQuantity > 0 && (
-            <div className="mt-4 inline-block bg-gray-900/80 backdrop-blur-sm px-4 py-2 rounded-full border border-yellow-400/30">
-              <span className="text-yellow-400 text-sm">
+            <div className="mt-4 inline-block bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-full border border-cyan-300/30">
+              <span className="text-cyan-300 text-sm">
                 Cart: {totalCartQuantity} items (€{totalCartValue.toFixed(2)})
               </span>
               <Button
                 variant="outline"
                 size="sm"
-                className="ml-3 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                className="ml-3 border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                 onClick={() => setShowCart(true)}
               >
                 {/* REPLACED */}
@@ -363,7 +363,7 @@ const HairbalifePage = () => {
           }`}
         >
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 font-bold mb-4">
               {/* REPLACED */}
               {translations[language].carousel_title}
             </h2>
@@ -395,13 +395,13 @@ const HairbalifePage = () => {
                 </div>
                 <button
                   onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-yellow-400 p-2 rounded-full"
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-slate-950/60 hover:bg-slate-900/80 text-cyan-300 p-2 rounded-full"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button
                   onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-yellow-400 p-2 rounded-full"
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-slate-950/60 hover:bg-slate-900/80 text-cyan-300 p-2 rounded-full"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -415,11 +415,11 @@ const HairbalifePage = () => {
             <div className="space-y-8">
               {/* Benefit 1 */}
               <div className="flex items-start space-x-4 group">
-                <div className="bg-gradient-to-br from-yellow-400 to-amber-500 p-3 rounded-xl">
-                  <Award className="h-6 w-6 text-black" />
+                <div className="bg-gradient-to-br from-cyan-300 to-sky-500 p-3 rounded-xl">
+                  <Award className="h-6 w-6 text-slate-950" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-yellow-400 mb-2">
+                  <h3 className="text-xl font-semibold text-cyan-300 mb-2">
                     {translations[language].benefit_1_title}
                   </h3>
                   <p className="text-gray-400">
@@ -429,11 +429,11 @@ const HairbalifePage = () => {
               </div>
               {/* Benefit 2 */}
               <div className="flex items-start space-x-4 group">
-                <div className="bg-gradient-to-br from-yellow-400 to-amber-500 p-3 rounded-xl">
-                  <Sparkles className="h-6 w-6 text-black" />
+                <div className="bg-gradient-to-br from-cyan-300 to-sky-500 p-3 rounded-xl">
+                  <Sparkles className="h-6 w-6 text-slate-950" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-yellow-400 mb-2">
+                  <h3 className="text-xl font-semibold text-cyan-300 mb-2">
                     {translations[language].benefit_2_title}
                   </h3>
                   <p className="text-gray-400">
@@ -443,11 +443,11 @@ const HairbalifePage = () => {
               </div>
               {/* Benefit 3 */}
               <div className="flex items-start space-x-4 group">
-                <div className="bg-gradient-to-br from-yellow-400 to-amber-500 p-3 rounded-xl">
-                  <Leaf className="h-6 w-6 text-black" />
+                <div className="bg-gradient-to-br from-cyan-300 to-sky-500 p-3 rounded-xl">
+                  <Leaf className="h-6 w-6 text-slate-950" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-yellow-400 mb-2">
+                  <h3 className="text-xl font-semibold text-cyan-300 mb-2">
                     {translations[language].benefit_3_title}
                   </h3>
                   <p className="text-gray-400">
@@ -461,13 +461,13 @@ const HairbalifePage = () => {
       </section>
 
       {/* About Section */}
-      <section className="py-20 px-6 bg-gradient-to-b from-black to-gray-900 animate-section">
+      <section className="py-20 px-6 bg-gradient-to-b from-slate-950 to-slate-900 animate-section">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] font-bold mb-8 text-yellow-400">
+          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] font-bold mb-8 text-cyan-300">
             {/* REPLACED */}
             {translations[language].about_title}
           </h2>
-          <Card className="bg-gray-900/50 border-yellow-400/20 backdrop-blur-sm">
+          <Card className="bg-slate-900/50 border-cyan-300/20 backdrop-blur-sm">
             <CardContent className="p-8">
               <p className="text-lg text-gray-300 leading-relaxed mb-6">
                 {/* REPLACED */}
@@ -479,7 +479,7 @@ const HairbalifePage = () => {
                   <Badge
                     key={index}
                     variant="outline"
-                    className="border-yellow-400 text-yellow-400 px-4 py-2 hover:bg-yellow-400 hover:text-black"
+                    className="border-cyan-300 text-cyan-300 px-4 py-2 hover:bg-cyan-300 hover:text-slate-950"
                   >
                     {value}
                   </Badge>
@@ -494,7 +494,7 @@ const HairbalifePage = () => {
       <section className="py-24 px-6 animate-section relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold">
+            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 font-bold">
               {translations[language].gallery_title}
             </h2>
             <p className="text-zinc-300/90 max-w-3xl mx-auto mt-4 text-lg leading-relaxed">
@@ -506,7 +506,7 @@ const HairbalifePage = () => {
             {mockData.productGallery.map((product, index) => (
               <Card
                 key={product.id}
-                className="group bg-zinc-900/65 border border-zinc-700/60 hover:border-yellow-300/50 hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden"
+                className="group bg-slate-900/70 border border-slate-700/60 hover:border-cyan-300/50 hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden"
               >
                 <CardContent className="p-0">
                   <div className="relative">
@@ -516,13 +516,13 @@ const HairbalifePage = () => {
                       className="w-full h-56 object-cover"
                     />
                     <div className="absolute top-3 left-3">
-                      <Badge className="bg-black/55 text-yellow-300 border-yellow-300/40">
+                      <Badge className="bg-slate-950/65 text-cyan-200 border-cyan-200/40">
                         {product.category}
                       </Badge>
                     </div>
                   </div>
                   <div className="p-5">
-                    <h3 className="text-xl font-semibold text-yellow-300 mb-2 leading-snug min-h-[56px]">
+                    <h3 className="text-xl font-semibold text-cyan-200 mb-2 leading-snug min-h-[56px]">
                       {product.name}
                     </h3>
                     <p className="text-zinc-300 text-sm mb-5 min-h-[44px]">
@@ -533,7 +533,7 @@ const HairbalifePage = () => {
                         €{product.price}
                       </span>
                       <Button
-                        className="bg-gradient-to-r from-yellow-300 to-amber-500 text-black font-semibold hover:from-yellow-200 hover:to-amber-400"
+                        className="bg-gradient-to-r from-cyan-300 to-sky-500 text-slate-950 font-semibold hover:from-cyan-200 hover:to-sky-400"
                         onClick={() => addGalleryItem(product)}
                       >
                         {translations[language].gallery_add_to_cart}
@@ -549,9 +549,9 @@ const HairbalifePage = () => {
     
 
       {/* Reels Section */}
-      <section className="py-20 px-6 bg-gradient-to-b from-black to-gray-900 animate-section">
+      <section className="py-20 px-6 bg-gradient-to-b from-slate-950 to-slate-900 animate-section">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold mb-12">
+          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 font-bold mb-12">
             {/* REPLACED */}
             {translations[language].reels_title}
           </h2>
@@ -560,7 +560,7 @@ const HairbalifePage = () => {
             {mockData.reels.map((reel) => (
               <div
                 key={reel.id}
-                className="relative w-full md:w-1/3 aspect-[9/16] bg-black rounded-2xl overflow-hidden border border-yellow-400/30 shadow-2xl hover:border-yellow-400/60 transition-all duration-500"
+                className="relative w-full md:w-1/3 aspect-[9/16] bg-slate-950 rounded-2xl overflow-hidden border border-cyan-300/30 shadow-2xl hover:border-cyan-300/60 transition-all duration-500"
               >
                 <video
                   src={reel.src}
@@ -571,7 +571,7 @@ const HairbalifePage = () => {
                   className="w-full h-full object-cover rounded-2xl"
                 ></video>
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                  <h3 className="text-lg font-semibold text-yellow-400">
+                  <h3 className="text-lg font-semibold text-cyan-300">
                     {reel.title} {/* Note: This text is still from mockData, add to translations if needed */}
                   </h3>
                 </div>
@@ -584,9 +584,9 @@ const HairbalifePage = () => {
 
 
       {/* Product Visual Gallery */}
-      <section className="py-24 px-6 bg-gradient-to-b from-gray-950 via-black to-gray-900 animate-section relative overflow-hidden">
+      <section className="py-24 px-6 bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 animate-section relative overflow-hidden">
         <div className="max-w-6xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 font-bold mb-4">
+          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 font-bold mb-4">
             {/* REPLACED */}
             {translations[language].visual_gallery_title}
           </h2>
@@ -609,7 +609,7 @@ const HairbalifePage = () => {
             ].map((src, index) => (
               <div
                 key={index}
-                className="relative overflow-hidden rounded-3xl cursor-pointer group break-inside-avoid border border-yellow-400/10 hover:border-yellow-400/40 shadow-xl hover:shadow-yellow-400/20 transition-all duration-500"
+                className="relative overflow-hidden rounded-3xl cursor-pointer group break-inside-avoid border border-cyan-300/15 hover:border-cyan-300/50 shadow-xl hover:shadow-cyan-300/20 transition-all duration-500"
                 onClick={() => setSelectedImage(src)}
               >
                 <img
@@ -619,7 +619,7 @@ const HairbalifePage = () => {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                 <div className="absolute bottom-4 left-4 text-left opacity-0 group-hover:opacity-100 transition-all duration-500">
-                  <p className="text-sm text-yellow-400 font-semibold tracking-wide">
+                  <p className="text-sm text-cyan-300 font-semibold tracking-wide">
                     #HairbalifeLuxury
                   </p>
                 </div>
@@ -639,28 +639,28 @@ const HairbalifePage = () => {
               className="max-h-[90vh] max-w-[90vw] rounded-2xl shadow-2xl transform scale-100 transition-all duration-500"
             />
             <button
-              className="absolute top-8 right-8 text-yellow-400 hover:text-white text-3xl font-bold"
+              className="absolute top-8 right-8 text-cyan-300 hover:text-white text-3xl font-bold"
               onClick={() => setSelectedImage(null)}
             >
               ✕
             </button>
           </div>
         )}
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-yellow-400/10 rounded-full blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+          <div className="absolute -top-40 -left-40 w-96 h-96 bg-cyan-300/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+          <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-sky-500/10 rounded-full blur-[120px] animate-pulse-slow"></div>
       </section>
 
       {/* Reviews */}
-      <section className="py-20 px-6 bg-gradient-to-b from-gray-900 to-black animate-section">
+      <section className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-950 animate-section">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 text-center mb-12 font-bold">
+          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 text-center mb-12 font-bold">
             {/* REPLACED */}
             {translations[language].reviews_title}
           </h2>
           {/* Reviews are from mockData, which is fine since they are in mixed languages already */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {mockData.reviews.map((review) => (
-              <Card key={review.id} className="bg-black/50 border-yellow-400/20">
+              <Card key={review.id} className="bg-slate-950/50 border-cyan-300/20">
                 <CardContent className="p-6">
                   <div className="flex mb-4">
                     {[...Array(5)].map((_, i) => (
@@ -668,7 +668,7 @@ const HairbalifePage = () => {
                         key={i}
                         className={`h-5 w-5 ${
                           i < review.rating
-                            ? "text-yellow-400 fill-current"
+                            ? "text-cyan-300 fill-current"
                             : "text-gray-600"
                         }`}
                       />
@@ -686,7 +686,7 @@ const HairbalifePage = () => {
                       />
                     )}
                     <div>
-                      <p className="text-yellow-400 font-semibold">
+                      <p className="text-cyan-300 font-semibold">
                         {review.name}
                       </p>
                       <p className="text-gray-500 text-sm">
@@ -704,13 +704,13 @@ const HairbalifePage = () => {
       {/* Buy Section */}
       <section id="buy-section" className="py-20 px-6 animate-section">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-yellow-400 mb-12 font-bold">
+          <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] text-cyan-300 mb-12 font-bold">
             {/* REPLACED */}
             {translations[language].buy_title}
           </h2>
-          <Card className="bg-gradient-to-br from-gray-900 to-black border-yellow-400/30 shadow-2xl max-w-md mx-auto">
+          <Card className="bg-gradient-to-br from-slate-900 to-slate-950 border-cyan-300/30 shadow-2xl max-w-md mx-auto">
             <CardContent className="p-8">
-              <h3 className="text-2xl font-semibold text-yellow-400 mb-4">
+              <h3 className="text-2xl font-semibold text-cyan-300 mb-4">
                 {/* REPLACED */}
                 {translations[language].buy_product_name}
               </h3>
@@ -726,7 +726,7 @@ const HairbalifePage = () => {
                   variant="outline"
                   size="icon"
                   onClick={decBuyQty}
-                  className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                  className="border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -737,7 +737,7 @@ const HairbalifePage = () => {
                   variant="outline"
                   size="icon"
                   onClick={incBuyQty}
-                  className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                  className="border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                 >
                   <Plus className="h-4 w-4" />
                 </Button>
@@ -746,7 +746,7 @@ const HairbalifePage = () => {
               <Button
                 size="lg"
                 onClick={addBuySectionToCart}
-                className="w-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-black font-semibold py-4 transform hover:scale-105 transition-all duration-300 shadow-xl"
+                className="w-full bg-gradient-to-r from-cyan-300 to-sky-500 hover:from-cyan-200 hover:to-sky-400 text-slate-950 font-semibold py-4 transform hover:scale-105 transition-all duration-300 shadow-xl"
                 disabled={buyQty === 0}
               >
                 <ShoppingCart className="mr-2 h-5 w-5" />
@@ -761,23 +761,23 @@ const HairbalifePage = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 bg-black text-center border-t border-yellow-400/10">
+      <footer className="py-10 bg-slate-950 text-center border-t border-cyan-300/10">
         <div className="mb-4 flex justify-center space-x-6">
           <a
             href="#"
-            className="text-gray-400 hover:text-yellow-400 transition"
+            className="text-gray-400 hover:text-cyan-300 transition"
           >
             <Instagram className="h-6 w-6" />
           </a>
           <a
             href="#"
-            className="text-gray-400 hover:text-yellow-400 transition"
+            className="text-gray-400 hover:text-cyan-300 transition"
           >
             <Facebook className="h-6 w-6" />
           </a>
           <a
             href="#"
-            className="text-gray-400 hover:text-yellow-400 transition"
+            className="text-gray-400 hover:text-cyan-300 transition"
           >
             <Twitter className="h-6 w-6" />
           </a>
@@ -795,14 +795,14 @@ const HairbalifePage = () => {
             className="flex-1 bg-black/50"
             onClick={() => setShowCart(false)}
           />
-          <div className="w-full max-w-md bg-black border-l border-yellow-400/20 p-6 overflow-y-auto">
+          <div className="w-full max-w-md bg-slate-950 border-l border-cyan-300/20 p-6 overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-['Playfair_Display'] text-yellow-400">
+              <h3 className="text-2xl font-['Playfair_Display'] text-cyan-300">
                 {/* REPLACED */}
                 {translations[language].cart_title}
               </h3>
               <button
-                className="text-gray-400 hover:text-yellow-400"
+                className="text-gray-400 hover:text-cyan-300"
                 onClick={() => setShowCart(false)}
               >
                 {/* REPLACED */}
@@ -820,7 +820,7 @@ const HairbalifePage = () => {
                 {cartItems.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between border border-yellow-400/20 rounded-lg p-3"
+                    className="flex items-center justify-between border border-cyan-300/20 rounded-lg p-3"
                   >
                     <div>
                       <p className="text-white font-medium">{item.name}</p>
@@ -833,7 +833,7 @@ const HairbalifePage = () => {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                        className="border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                         onClick={() => decItem(item.id)}
                       >
                         <Minus className="h-4 w-4" />
@@ -844,7 +844,7 @@ const HairbalifePage = () => {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black"
+                        className="border-cyan-300 text-cyan-300 hover:bg-cyan-300 hover:text-slate-950"
                         onClick={() => incItem(item.id)}
                       >
                         <Plus className="h-4 w-4" />
@@ -860,19 +860,19 @@ const HairbalifePage = () => {
                   </div>
                 ))}
 
-                <div className="border-t border-yellow-400/20 pt-4">
+                <div className="border-t border-cyan-300/20 pt-4">
                   <div className="flex justify-between mb-2 text-gray-400">
                     {/* REPLACED */}
                     <span>{translations[language].cart_items}</span>
                     <span>{totalCartQuantity}</span>
                   </div>
-                  <div className="flex justify-between font-semibold text-yellow-400">
+                  <div className="flex justify-between font-semibold text-cyan-300">
                     {/* REPLACED */}
                     <span>{translations[language].cart_total}</span>
                     <span>€{totalCartValue.toFixed(2)}</span>
                   </div>
                   <Button
-                    className="w-full mt-4 bg-gradient-to-r from-yellow-400 to-amber-500 text-black"
+                    className="w-full mt-4 bg-gradient-to-r from-cyan-300 to-sky-500 text-slate-950"
                     onClick={handleCheckout}
                   >
                     {/* REPLACED */}
