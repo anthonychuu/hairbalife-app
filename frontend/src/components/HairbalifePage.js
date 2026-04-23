@@ -530,9 +530,9 @@ const HairbalifePage = () => {
                     </p>
                     <div className="flex justify-between items-center gap-3">
                       <span className="text-2xl font-bold text-white tracking-tight">
-                      €{product.price}
-                    </span>
-                    <Button
+                        €{product.price}
+                      </span>
+                      <Button
                         className="bg-gradient-to-r from-yellow-300 to-amber-500 text-black font-semibold hover:from-yellow-200 hover:to-amber-400"
                         onClick={() => addGalleryItem(product)}
                       >
